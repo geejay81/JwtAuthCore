@@ -9,7 +9,8 @@ using Microsoft.IdentityModel.Tokens;
 using JwtAuthCore.Models;
 
 namespace WebApiAuthDemo.Controllers
-{
+{ 
+    [Route("api/[controller]")]
     public class TokenController : Controller
     {
         private readonly IConfiguration _configuration;
@@ -20,13 +21,12 @@ namespace WebApiAuthDemo.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        [Route("token")]
         public IActionResult Post([FromBody]User user)
         {
             if (ModelState.IsValid)
             {
-                var userId = GetUserIdFromCredentials(user);
-                if (userId == -1)
+                // TODO: Check username and password against a database
+                if (user.Username != "admin" || user.Password != "1234")
                 {
                     return Unauthorized();
                 }
@@ -52,17 +52,6 @@ namespace WebApiAuthDemo.Controllers
             }
 
             return BadRequest();
-        }
-
-        private int GetUserIdFromCredentials(User user)
-        {
-            var userId = -1;
-            if (user.Username == "admin" && user.Password == "1234")
-            {
-                userId = 5;
-            }
-
-            return userId;
         }
     }
 }

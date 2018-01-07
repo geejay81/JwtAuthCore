@@ -53,6 +53,7 @@ namespace JwtAuthCore
             }
 
             app.UseAuthentication();
+            app.UseStaticFiles();
             app.UseMvc();
         }
     }
