@@ -19,6 +19,7 @@ namespace JwtAuthCore
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseWebRoot("AngularClient/dist")
                 .UseStartup<Startup>()
                 .Build();
     }
