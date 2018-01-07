@@ -1,0 +1,10 @@
+/Users/gregparr/code/dotnet/JwtAuthCore/bin/Debug/netcoreapp2.0/JwtAuthCore.deps.json
+/Users/gregparr/code/dotnet/JwtAuthCore/bin/Debug/netcoreapp2.0/JwtAuthCore.runtimeconfig.json
+/Users/gregparr/code/dotnet/JwtAuthCore/bin/Debug/netcoreapp2.0/JwtAuthCore.runtimeconfig.dev.json
+/Users/gregparr/code/dotnet/JwtAuthCore/bin/Debug/netcoreapp2.0/JwtAuthCore.dll
+/Users/gregparr/code/dotnet/JwtAuthCore/bin/Debug/netcoreapp2.0/JwtAuthCore.pdb
+/Users/gregparr/code/dotnet/JwtAuthCore/obj/Debug/netcoreapp2.0/JwtAuthCore.csproj.CoreCompileInputs.cache
+/Users/gregparr/code/dotnet/JwtAuthCore/obj/Debug/netcoreapp2.0/JwtAuthCore.AssemblyInfoInputs.cache
+/Users/gregparr/code/dotnet/JwtAuthCore/obj/Debug/netcoreapp2.0/JwtAuthCore.AssemblyInfo.cs
+/Users/gregparr/code/dotnet/JwtAuthCore/obj/Debug/netcoreapp2.0/JwtAuthCore.dll
+/Users/gregparr/code/dotnet/JwtAuthCore/obj/Debug/netcoreapp2.0/JwtAuthCore.pdb
