@@ -91,3 +91,64 @@ Under construction. I will create a new branch at each stage.
     ng serve -o 
     ```
     * As described in the routing above, you should be presented with the contents of the Account route
+
+* Step 4 - Adding a guard to secure the account component/route
+
+    * Create the guard service using the Angular CLI
+    ``` 
+    ng generate service services/auth-guard
+    ```
+    * Create a canActivate function that can be called in the route config. This will be set to just return true for now
+    ``` Javascript
+    import { Injectable } from '@angular/core';
+    import { CanActivate } from '@angular/router';
+
+    @Injectable()
+    export class AuthGuard implements CanActivate {
+        canActivate() {
+            console.log('canActivate called');
+            return true;
+        }
+    }
+    ```
+    * Add guard to account route in routing configuration, app.routing.ts
+    ``` Javascript
+    ...
+    { path: '', component: AccountComponent, canActivate: [AuthGuardService] },
+    ...
+    ```
+    * Add AuthGuardService to providers in app.module.ts
+    ``` Javascript
+    ...
+    providers: [AuthGuardService],
+    ...
+    ```
+    * Serve the Angular application and check that 'canActive called' appears in the console when the application starts up
+    ``` 
+    ng serve -o
+    ```
+    * Now update the AuthGuardService canActivate() method so that it returns false and redirects to the login component. We'll need to add a reference to the Router for this
+    ``` Javascript
+    import { Injectable } from '@angular/core';
+    import { Router, CanActivate } from '@angular/router';
+
+    @Injectable()
+    export class AuthGuardService implements CanActivate {
+        isLoggedIn = false;
+
+        constructor(private router: Router) { }
+
+        canActivate() {
+
+            if (this.isLoggedIn) {
+                return true;
+            }
+
+            this.router.navigate(['/login']);
+            return false;
+        }
+
+    }
+    ```
+    * When we run the application now, we are instantly redirected to the /login route, and cannot get to the /account route
+    

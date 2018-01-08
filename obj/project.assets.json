@@ -12533,23 +12533,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\gparr\\.nuget\\packages\\": {},
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+    "/Users/gregparr/.nuget/packages/": {},
+    "/usr/local/share/dotnet/sdk/NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\gparr\\Source\\Repos\\Personal\\JwtAuthCore\\JwtAuthCore.csproj",
+      "projectUniqueName": "/Users/gregparr/code/dotnet/JwtAuthCore/JwtAuthCore.csproj",
       "projectName": "JwtAuthCore",
-      "projectPath": "C:\\Users\\gparr\\Source\\Repos\\Personal\\JwtAuthCore\\JwtAuthCore.csproj",
-      "packagesPath": "C:\\Users\\gparr\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\gparr\\Source\\Repos\\Personal\\JwtAuthCore\\obj\\",
+      "projectPath": "/Users/gregparr/code/dotnet/JwtAuthCore/JwtAuthCore.csproj",
+      "packagesPath": "/Users/gregparr/.nuget/packages/",
+      "outputPath": "/Users/gregparr/code/dotnet/JwtAuthCore/obj/",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\gparr\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "/Users/gregparr/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp2.0"
@@ -12573,7 +12573,7 @@
         "dependencies": {
           "Microsoft.NETCore.App": {
             "target": "Package",
-            "version": "2.0",
+            "version": "2.0.0",
             "autoReferenced": true
           },
           "Microsoft.AspNetCore.All": {
