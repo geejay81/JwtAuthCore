@@ -8,3 +8,13 @@
 /Users/gregparr/code/dotnet/JwtAuthCore/obj/Debug/netcoreapp2.0/JwtAuthCore.AssemblyInfo.cs
 /Users/gregparr/code/dotnet/JwtAuthCore/obj/Debug/netcoreapp2.0/JwtAuthCore.dll
 /Users/gregparr/code/dotnet/JwtAuthCore/obj/Debug/netcoreapp2.0/JwtAuthCore.pdb
+C:\Users\gparr\Source\Repos\Personal\JwtAuthCore\bin\Debug\netcoreapp2.0\JwtAuthCore.deps.json
+C:\Users\gparr\Source\Repos\Personal\JwtAuthCore\bin\Debug\netcoreapp2.0\JwtAuthCore.runtimeconfig.json
+C:\Users\gparr\Source\Repos\Personal\JwtAuthCore\bin\Debug\netcoreapp2.0\JwtAuthCore.runtimeconfig.dev.json
+C:\Users\gparr\Source\Repos\Personal\JwtAuthCore\bin\Debug\netcoreapp2.0\JwtAuthCore.dll
+C:\Users\gparr\Source\Repos\Personal\JwtAuthCore\bin\Debug\netcoreapp2.0\JwtAuthCore.pdb
+C:\Users\gparr\Source\Repos\Personal\JwtAuthCore\obj\Debug\netcoreapp2.0\JwtAuthCore.csproj.CoreCompileInputs.cache
+C:\Users\gparr\Source\Repos\Personal\JwtAuthCore\obj\Debug\netcoreapp2.0\JwtAuthCore.AssemblyInfoInputs.cache
+C:\Users\gparr\Source\Repos\Personal\JwtAuthCore\obj\Debug\netcoreapp2.0\JwtAuthCore.AssemblyInfo.cs
+C:\Users\gparr\Source\Repos\Personal\JwtAuthCore\obj\Debug\netcoreapp2.0\JwtAuthCore.dll
+C:\Users\gparr\Source\Repos\Personal\JwtAuthCore\obj\Debug\netcoreapp2.0\JwtAuthCore.pdb
