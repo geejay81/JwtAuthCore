@@ -1,3 +1,18 @@
-<p>
-  login works!
-</p>
+<form (ngSubmit)="login(f)" #f="ngForm" novalidate>
+  <input
+    type="text"
+    id="username"
+    name="username"
+    password="username"
+    placeholder="username"
+    ngModel
+    required>
+  <input
+    type="password"
+    id="password"
+    name="password"
+    placeholder="password"
+    ngModel
+    required>
+  <button type="submit">Login</button>
+</form>

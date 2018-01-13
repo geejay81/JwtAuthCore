@@ -104,7 +104,7 @@ Under construction. I will create a new branch at each stage.
     import { CanActivate } from '@angular/router';
 
     @Injectable()
-    export class AuthGuard implements CanActivate {
+    export class AuthGuardService implements CanActivate {
         canActivate() {
             console.log('canActivate called');
             return true;
@@ -151,4 +151,134 @@ Under construction. I will create a new branch at each stage.
     }
     ```
     * When we run the application now, we are instantly redirected to the /login route, and cannot get to the /account route
+
+* Step 5 - Set up the Authentication Service
+
+    * Use the Angular CLI to generate the Authentication Service
+    ``` 
+    ng g s services/authentication
+    ```
+    * Wire up the new authentication.service.ts with a login and logout method. We'll need to inject and instance of HttpClient to request the token. The login method will just write to the console for now
+    ``` Javascript
+    import { Injectable } from '@angular/core';
+    import { HttpClient } from '@angular/common/http';
+    import { Router } from '@angular/router';
+
+    @Injectable()
+    export class AuthenticationService {
+        tokenEndpoint = 'http://localhost:5000/api/token';
+        public token: string;
+        public isAuthenticated: boolean;
+
+        constructor(
+            private http: HttpClient,
+            private router: Router
+        ) {
+            this.token = '';
+            this.isAuthenticated = false;
+        }
+
+        login(username: string, password: string) {
+            this.http.post(this.tokenEndpoint, { username: username, password: password })
+            .subscribe(
+                data => {
+                this.token = data['token'];
+                this.isAuthenticated = true;
+                console.log(data);
+                this.router.navigate(['/account']);
+                }
+            );
+        }
+
+        logout() {
+
+        }
+    }
+    ```
+    * Add service to app.module.ts providers so it can be used across the application
+    ``` Javascript
+    ...
+    providers: [AuthGuardService, AuthenticationService],
+    ...
+    ```
+    * Add a login form to the login component HTML file
+    ``` html
+   <form (ngSubmit)="login(f)" #f="ngForm" novalidate>
+        <input
+            type="text"
+            id="username"
+            name="username"
+            password="username"
+            placeholder="username"
+            ngModel
+            required>
+        <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="password"
+            ngModel
+            required>
+        <button type="submit">Login</button>
+    </form>
+    ```
+    * Update the Login Component so that the Authentication Service is injected and the login method calls the Authentication Service login method
+    ``` Javascript
+    ...
+    import { AuthenticationService } from '../services/authentication.service';
+    ...
+    constructor(private auth: AuthenticationService) { }
+    ...
+    login(f: NgForm) {
+        this.auth.login(
+            form.value.username,
+            form.value.password
+        );
+    }
+    ...
+    ```
+    * Add some necessary modules to app.module.ts - HttpClientModule as we are now using HttpClient, and FormsModule for our login form
+    ``` Javascript
+    ...
+    import { FormsModule } from '@angular/forms';
+    import { HttpClientModule } from '@angular/common/http';
+    ...
+    imports: [
+        ...
+        FormsModule,
+        HttpClientModule,
+        ...
+    ```
+    * Now we can amend the Auth Guard auth-guard.service.ts to check the AuthenticationService
+    ``` Javascript
+    import { Injectable } from '@angular/core';
+    import { Router, CanActivate } from '@angular/router';
+    import { AuthenticationService } from './authentication.service';
+
+    @Injectable()
+    export class AuthGuardService implements CanActivate {
+
+        constructor(
+            private router: Router,
+            private authenticationService: AuthenticationService
+        ) { }
+
+        canActivate() {
+
+            if (this.authenticationService.isAuthenticated) {
+                return true;
+            }
+
+            this.router.navigate(['/login']);
+            return false;
+        }
+
+    }
+
+    ```
+    * Now that the Authentication Service is referencing the .NET Core Web API, we will need to build the Angular App so that it can be read when running the .NET Core app...
+    ```
+    ng build
     
+    dotnet run
+    ```
