@@ -5,15 +5,16 @@ import { Router } from '@angular/router';
 @Injectable()
 export class AuthenticationService {
   tokenEndpoint = 'http://localhost:5000/api/token';
-  public token: string;
+  public token = '';
   public isAuthenticated: boolean;
 
   constructor(
     private http: HttpClient,
     private router: Router
   ) {
-    this.token = '';
-    this.isAuthenticated = false;
+    const credentials = JSON.parse(localStorage.getItem('credentials'));
+    this.token = credentials && credentials.token;
+    this.isAuthenticated = this.token === '';
   }
 
   login(username: string, password: string) {
@@ -22,13 +23,16 @@ export class AuthenticationService {
         data => {
           this.token = data['token'];
           this.isAuthenticated = true;
-          console.log(data);
+          localStorage.setItem('credentials', JSON.stringify({ token: this.token }));
           this.router.navigate(['/account']);
         }
       );
   }
 
   logout() {
-
+    localStorage.removeItem('credentials');
+    this.token = '';
+    this.isAuthenticated = false;
+    this.router.navigate(['/login']);
   }
 }

@@ -279,6 +279,56 @@ Under construction. I will create a new branch at each stage.
     * Now that the Authentication Service is referencing the .NET Core Web API, we will need to build the Angular App so that it can be read when running the .NET Core app...
     ```
     ng build
-    
+
+    dotnet run
+    ```
+* Step 6 - Handling page refreshes, and logging out
+    * In the Authentication Service, when we have received the token we will add it to local storage for later reference
+    ``` Javascript
+    login(username: string, password: string) {
+        ...
+        this.token = data['token'];
+        this.isAuthenticated = true;
+        localStorage.setItem('credentials', JSON.stringify({ token: this.token }));
+        ...
+    }
+    ```
+    * Update the Authentication Service constructor to check the localStorage for an existing token, then use this to authenticate the user so they can refresh the page and not have to log in again
+    ``` Javascript
+    {
+        const credentials = JSON.parse(localStorage.getItem('credentials'));
+        this.token = credentials && credentials.token;
+        this.isAuthenticated = this.token === '';
+    }
+    ```
+    * Add logic to the logout method. We will need to remove the token, set isAuthenticated to false, clear the localStorage and navigate to the login screen
+    ``` Javascript
+    logout() {
+        localStorage.removeItem('credentials');
+        this.token = '';
+        this.isAuthenticated = false;
+        this.router.navigate(['/login']);
+    }
+    ```
+    * Let's add a call to logout in the Account Component TS file
+    ``` Javascript
+    import { AuthenticationService } from '../services/authentication.service';
+    ...
+    constructor (
+        private authenticationService: AuthenticationService
+    ) { }
+    ...
+    onLogout() {
+        this.authenticationService.logout();
+    }
+    ```
+    * Add a button in the Account Component HTML that calls onLogout() method
+    ``` html
+    <button (click)="onLogout()" type="button">Logout</button>
+    ```
+    * Finally, to test, we need to build the Angular app and run the .NET project
+    ```
+    ng build
+
     dotnet run
     ```
