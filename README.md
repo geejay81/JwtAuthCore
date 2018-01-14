@@ -332,3 +332,195 @@ Under construction. I will create a new branch at each stage.
 
     dotnet run
     ```
+* Step 7 - Adding token to all http requests
+    * Generate the Interceptor file - token.interceptor.ts - in the services folder (makes sense to keep it here as will intercept requests from services)
+    ``` Javascript
+    import { Injectable } from '@angular/core';
+    import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
+    import { AuthenticationService } from './authentication.service';
+    import { Observable } from 'rxjs/Observable';
+
+    @Injectable()
+    export class TokenInterceptor implements HttpInterceptor {
+
+        constructor(
+            private authenticationService: AuthenticationService
+        ) {}
+
+        intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+            request = request.clone({
+                setHeaders: {
+                    Authorization: `Bearer ${this.authenticationService.token}`
+                }
+            });
+            return next.handle(request);
+        }
+    }
+    ```
+    * Reference the Interceptor file in app.module.ts
+    ``` Javascript
+    ...
+    import { HTTP_INTERCEPTORS } from '@angular/common/http';
+    import { TokenInterceptor } from './services/token.interceptor';
+    ...
+    providers: [
+        ...
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: TokenInterceptor,
+            multi: true
+        }
+        ...
+    ```
+    * We'll test it out by making a call to the Values enpoint in the .NET Web API
+    * Add Values Service in Angular Client
+    ```
+    ng g s services/values
+    ```
+    * Add get() method to Values Service to get data from the Values API endpoint
+    ``` Javascript
+    import { HttpClient } from '@angular/common/http';
+    import { Injectable } from '@angular/core';
+
+    @Injectable()
+    export class ValuesService {
+
+        constructor(
+            private http: HttpClient
+        ) { }
+
+        get() {
+            return this.http.get('/api/values');
+        }
+    }
+    ```
+    * Add the ValuesService to the providers on the AccountComponent ts file as this is the only place that we will use it (you could also add it globally to the app.module.ts file)
+    ```
+    import { } from '../services/values.service';
+    ...
+    providers: [
+        ValuesComponent
+    ]
+    ...
+    * To check it is working, we will log to the console the values received from the service on ngInit. Don't forget, we would not be able to retrieve these values from the API without sending the token in the headers of our request
+    ``` Javascript
+    constructor(
+        ...,
+        private valuesService: ValuesService
+    ) { }
+
+    ngOnInit() {
+        this.valuesService.get().subscribe(
+            data => {
+                console.table(data);
+            }
+        );
+    }
+    ```
+    * When we run now we will find that we have a dependency cycle as the TokenInterceptor requires AuthenticationService and also the AuthenticationService is sending HTTP requests. To prevent this, we will split part of AuthenticationService in to a separate TokenService and use this in the TokenInterceptor
+    ```
+    ng g s services/token
+    ```
+    * We will now split out all references to token from AuthenticationService to the separate TokenService
+    ``` Javascript
+    // token.service.ts
+    import { Injectable } from '@angular/core';
+
+    @Injectable()
+    export class TokenService {
+        public token = '';
+
+        constructor() {
+            const credentials = JSON.parse(localStorage.getItem('credentials'));
+            this.token = credentials && credentials.token;
+        }
+
+        clearToken(): void {
+            localStorage.removeItem('credentials');
+            this.token = '';
+        }
+
+        getToken(): string {
+            return this.token;
+        }
+
+        isSet(): boolean {
+            return this.token !== '';
+        }
+
+        setToken(token): void {
+            this.token = token;
+            localStorage.setItem('credentials', JSON.stringify({ token: this.token }));
+        }
+    }
+
+    // authentication.service.ts
+    import { TokenService } from './token.service';
+    import { Injectable } from '@angular/core';
+    import { HttpClient } from '@angular/common/http';
+    import { Router } from '@angular/router';
+
+    @Injectable()
+    export class AuthenticationService {
+        tokenEndpoint = 'http://localhost:5000/api/token';
+        public isAuthenticated: boolean;
+
+        constructor(
+            private http: HttpClient,
+            private router: Router,
+            private tokenService: TokenService
+        ) {
+            this.isAuthenticated = this.tokenService.isSet();
+        }
+
+        login(username: string, password: string) {
+            this.http.post(this.tokenEndpoint, { username: username, password: password })
+            .subscribe(
+                data => {
+                this.tokenService.setToken(data['token']);
+                this.isAuthenticated = true;
+                this.router.navigate(['/account']);
+                }
+            );
+        }
+
+        logout() {
+            this.tokenService.clearToken();
+            this.isAuthenticated = false;
+            this.router.navigate(['/login']);
+        }
+    }
+    ```
+    * Reference TokenService in app.module.ts providers
+    ``` Javascript
+    providers: [
+        ...,
+        TokenService
+    ]
+    ```
+    * Update TokenInterceptor to fetch token from TokenService instead of AuthenticationService
+    ``` Javascript
+    // token.interceptor.ts
+
+    import { Injectable } from '@angular/core';
+    import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
+    import { TokenService } from './token.service';
+    import { Observable } from 'rxjs/Observable';
+
+    @Injectable()
+    export class TokenInterceptor implements HttpInterceptor {
+
+        constructor(
+            private tokenService: TokenService
+        ) {}
+
+        intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+            request = request.clone({
+            setHeaders: {
+                Authorization: `Bearer ${this.tokenService.getToken()}`
+            }
+            });
+            return next.handle(request);
+        }
+    }
+    ```

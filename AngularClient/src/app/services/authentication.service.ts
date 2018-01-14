@@ -1,3 +1,4 @@
+import { TokenService } from './token.service';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -5,33 +6,30 @@ import { Router } from '@angular/router';
 @Injectable()
 export class AuthenticationService {
   tokenEndpoint = 'http://localhost:5000/api/token';
-  public token = '';
-  public isAuthenticated: boolean;
+  public isAuthenticated = false;
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private tokenService: TokenService
   ) {
-    const credentials = JSON.parse(localStorage.getItem('credentials'));
-    this.token = credentials && credentials.token;
-    this.isAuthenticated = this.token === '';
+    this.isAuthenticated = this.tokenService.isSet();
+    console.log(`Authenticated: ${this.isAuthenticated}`);
   }
 
   login(username: string, password: string) {
     this.http.post(this.tokenEndpoint, { username: username, password: password })
       .subscribe(
         data => {
-          this.token = data['token'];
+          this.tokenService.setToken(data['token']);
           this.isAuthenticated = true;
-          localStorage.setItem('credentials', JSON.stringify({ token: this.token }));
           this.router.navigate(['/account']);
         }
       );
   }
 
   logout() {
-    localStorage.removeItem('credentials');
-    this.token = '';
+    this.tokenService.clearToken();
     this.isAuthenticated = false;
     this.router.navigate(['/login']);
   }

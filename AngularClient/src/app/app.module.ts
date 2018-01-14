@@ -10,6 +10,9 @@ import { AccountComponent } from './account/account.component';
 import { routing } from './app.routing';
 import { AuthenticationService } from './services/authentication.service';
 
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { TokenInterceptor } from './services/token.interceptor';
+import { TokenService } from './services/token.service';
 
 @NgModule({
   declarations: [
@@ -25,7 +28,13 @@ import { AuthenticationService } from './services/authentication.service';
   ],
   providers: [
     AuthGuardService,
-    AuthenticationService
+    AuthenticationService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+    },
+    TokenService
   ],
   bootstrap: [
     AppComponent
