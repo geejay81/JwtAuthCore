@@ -395,13 +395,14 @@ Under construction. I will create a new branch at each stage.
     }
     ```
     * Add the ValuesService to the providers on the AccountComponent ts file as this is the only place that we will use it (you could also add it globally to the app.module.ts file)
-    ```
+    ``` Javascript
     import { } from '../services/values.service';
     ...
     providers: [
         ValuesComponent
     ]
     ...
+    ```
     * To check it is working, we will log to the console the values received from the service on ngInit. Don't forget, we would not be able to retrieve these values from the API without sending the token in the headers of our request
     ``` Javascript
     constructor(
