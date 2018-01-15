@@ -525,3 +525,51 @@ Under construction. I will create a new branch at each stage.
         }
     }
     ```
+* TODO:
+    * Handle failed login, e.g. incorrect username or password
+    * Handle expired tokens
+
+* Additional Step: Production build of the Angular app
+    1. When publishing we will first need to make sure that build a production version of the Angular app with the --base-href set to our intended url...
+    2. Update any localhost references to point to the hosted URL
+    ```
+    ng build --prod --base-href "https://jwt-auth-core.herokuapp.com/"
+    ```
+
+* Additional Step: Deploying to Heroku with Docker
+    
+    1. Publish .NET application
+    ```
+    # In root of application folder
+
+    dotnet publish -c Release
+    ```
+    2. Create *Dockerfile* with no extension
+    ```
+    FROM microsoft/aspnetcore
+    WORKDIR /app
+    COPY . .
+    CMD ASPNETCORE_URLS=http://*:$PORT dotnet JwtAuthCore.dll
+    ```
+    3. Copy Dockerfile to Release Publish folder
+    ```
+    cp DockerFile ./bin/release/netcoreapp2.0/publish
+    ```
+    4. Build the Docker image. N.B. Image name must be lower case
+    ```
+    docker build -t "jwt-auth-core" ./bin/release/netcoreapp2.0/publish
+    ```
+    5. Create the App on Heroku, same app name as image name above
+    6. Log in to Heroku
+    ```
+    heroku login
+    heroku container:login
+    ```
+    7. Tag the Heroku target image using the docker command
+    ```
+    docker tag "jwt-auth-core" registry.heroku.com/jwt-auth-core/web
+    ```
+    8. Deploy the publish build to Heroku using the docker command
+    ```
+    docker push registry.heroku.com/jwt-auth-core/web
+    ```

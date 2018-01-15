@@ -1,0 +1,5 @@
+/Users/gregparr/code/dotnet/JwtAuthCore
+--output-path=obj/Release/netcoreapp2.0/
+--application-name=JwtAuthCore
+--content-root=/Users/gregparr/code/dotnet/JwtAuthCore
+--file=

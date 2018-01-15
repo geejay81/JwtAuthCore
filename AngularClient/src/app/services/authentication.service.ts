@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthenticationService {
-  tokenEndpoint = 'http://localhost:5000/api/token';
+  tokenEndpoint = '/api/token';
   public isAuthenticated = false;
 
   constructor(
