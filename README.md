@@ -525,6 +525,24 @@ Under construction. I will create a new branch at each stage.
         }
     }
     ```
+* Step 8 - Handle SPA Routing in .NET routing
+    ``` cs
+    ...
+    using System.IO;
+    ...
+    // Startup.cs Configure method
+    app.Use(async (context, next) => 
+        { 
+            await next(); 
+            if (context.Response.StatusCode == 404 && !Path.HasExtension(context.Request.Path.Value)  && !context.Request.Path.Value.StartsWith("/api")) 
+            { 
+                context.Request.Path = "/index.html";
+                context.Response.StatusCode = 200;
+                await next(); 
+            } 
+        }); 
+    ```
+
 * TODO:
     * Handle failed login, e.g. incorrect username or password
     * Handle expired tokens
@@ -533,7 +551,7 @@ Under construction. I will create a new branch at each stage.
     1. When publishing we will first need to make sure that build a production version of the Angular app with the --base-href set to our intended url...
     2. Update any localhost references to point to the hosted URL
     ```
-    ng build --prod --base-href "https://jwt-auth-core.herokuapp.com/"
+    ng build --prod --base-href "/"
     ```
 
 * Additional Step: Deploying to Heroku with Docker

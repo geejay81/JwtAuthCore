@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -53,6 +54,17 @@ namespace JwtAuthCore
             }
 
             app.UseAuthentication();
+
+            app.Use(async (context, next) => 
+            { 
+                await next(); 
+                if (context.Response.StatusCode == 404 && !Path.HasExtension(context.Request.Path.Value)  && !context.Request.Path.Value.StartsWith("/api")) 
+                { 
+                    context.Request.Path = "/index.html";
+                    context.Response.StatusCode = 200;
+                    await next(); 
+                } 
+            }); 
             app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseMvc();
